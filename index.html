@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Blood Bank Inventory</h1>
+    <table border="1">
+        <tr>
+            <th>Blood Type</th>
+            <th>Quantity (units)</th>
+            <th>Expiration Date</th>
+        </tr>
+        {% for blood_type, details in inventory.items() %}
+        <tr>
+            <td>{{ blood_type }}</td>
+            <td>{{ details['quantity'] }}</td>
+            <td>{{ details['expiration_date'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Update Inventory</h2>
+    <form action="{{ url_for('update_inventory') }}" method="POST">
+        <label for="blood_type">Blood Type:</label>
+        <select name="blood_type" id="blood_type">
+            {% for blood_type in inventory.keys() %}
+            <option value="{{ blood_type }}">{{ blood_type }}</option>
+            {% endfor %}
+        </select>
+        <label for="quantity">New Quantity:</label>
+        <input type="number" name="quantity" id="quantity">
+        <button type="submit">Update</button>
+    </form>
+
+    <h2>Distribution Results</h2>
+    {% for result in distribution_results %}
+        <h3>{{ result['hospital'] }}</h3>
+        <ul>
+        {% for blood_type, distributed in result['distribution'].items() %}
+            <li>{{ blood_type }}: {{ distributed }}</li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+</body>
+</html>
